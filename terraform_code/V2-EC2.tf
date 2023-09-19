@@ -1,25 +1,30 @@
 provider "aws" {
-  region = "us-east-1"
+  region  = "us-east-1"
+}
+resource "aws_instance" "instance1" {
+  ami           = "ami-04cb4ca688797756f"
+  instance_type = "t2.micro"
+  key_name  = "Java-project"
+  aws_security_group =["Project-SG"]
+
+  tags = {
+    Name = "Instance_project"
+  }
 }
 
-resource "aws_instance" "demo-server" {
-    ami = "ami-022e1a32d3f742bd8"
-    instance_type = "t2.micro"
-    key_name = "dpp"
-    security_groups = [ "demo-sg" ]
-}
+resource "aws_security_group" "Project-SG" {
+  name        = "Project-SG"
+  description = "SSH_Access"
+ // vpc_id      = aws_vpc.main.id   until now without VPC
 
-resource "aws_security_group" "demo-sg" {
-  name        = "demo-sg"
-  description = "SSH Access"
-  
   ingress {
-    description      = "Shh access"
+    description      = "ssh"
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
-    }
+  
+  }
 
   egress {
     from_port        = 0
@@ -30,7 +35,6 @@ resource "aws_security_group" "demo-sg" {
   }
 
   tags = {
-    Name = "ssh-prot"
-
+    Name = "SSH-prot"
   }
 }
